@@ -7,22 +7,14 @@
         <a href="{{ route('satellites.create') }}" class="btn btn-primary">+ Daftarkan Satelit Baru</a>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4 border-0 shadow-sm">
         <div class="card-body">
             <form action="{{ route('satellites.index') }}" method="GET" class="row g-3">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <input type="text" name="search" class="form-control" placeholder="Cari nama satelit..." value="{{ request('search') }}">
                 </div>
                 <div class="col-md-2">
-                    <select name="orbit_type" class="form-select">
-                        <option value="">Semua Orbit</option>
-                        <option value="LEO" {{ request('orbit_type') == 'LEO' ? 'selected' : '' }}>LEO</option>
-                        <option value="MEO" {{ request('orbit_type') == 'MEO' ? 'selected' : '' }}>MEO</option>
-                        <option value="GEO" {{ request('orbit_type') == 'GEO' ? 'selected' : '' }}>GEO</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                    <button type="submit" class="btn btn-secondary w-100">Cari</button>
                 </div>
             </form>
         </div>
@@ -36,13 +28,13 @@
     @endif
 
     <div class="table-responsive bg-white p-3 rounded shadow-sm">
-        <table class="table table-hover">
+        <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
                     <th>Nama Satelit</th>
                     <th>Stasiun Bumi (Relasi)</th>
                     <th>Negara</th>
-                    <th>Orbit</th>
+                    <th>Tipe Orbit</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -63,6 +55,7 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
+                            <a href="{{ route('satellites.show', $sat->id) }}" class="btn btn-sm btn-info text-white">Detail</a>
                             <a href="{{ route('satellites.edit', $sat->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('satellites.destroy', $sat->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus satelit ini?')">
                                 @csrf
