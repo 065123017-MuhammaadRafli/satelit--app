@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class GroundStation extends Model
 {
-   protected $fillable = ['name', 'location', 'country', 'latitude', 'longitude'];
+    use HasFactory;
 
-   public function satellites()
-   {
-       return $this->hasMany(Satellite::class);
-   }
+    protected $guarded = ['id'];
+
+    // Satu Ground Station dapat memantau banyak Satelit
+    public function satellites()
+    {
+        return $this->hasMany(Satellite::class);
+    }
 }

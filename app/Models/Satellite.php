@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Satellite extends Model
 {
-    // Kolom yang boleh diisi
-    protected $fillable = [
-        'ground_station_id', 'name', 'owner_country',
-        'launch_date', 'orbit_type', 'tle', 'is_active', 'description'
-    ];
+    use HasFactory;
 
-    // Relasi: Satelit ini milik satu Ground Station
+    protected $guarded = ['id'];
+
+    // Satu Satelit dimiliki/dipantau oleh satu Ground Station
     public function groundStation()
     {
         return $this->belongsTo(GroundStation::class);
