@@ -56,3 +56,34 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# 🛰️ Satelit--App Monitoring
+
+Aplikasi web yang dibangun menggunakan **Laravel 13** dan **Bootstrap 5** untuk memantau status, tipe orbit, dan lokasi stasiun bumi (*Ground Stations*) dari berbagai satelit. Aplikasi ini dibuat untuk memenuhi tugas akhir dalam memantau dan mengelola data satelit serta stasiun bumi secara terintegrasi.
+
+## 🚀 Fitur Utama
+
+- **Dashboard Statistik:** Menampilkan ringkasan data satelit, satelit aktif, dan total stasiun bumi secara dinamis.
+- **Manajemen Stasiun Bumi (Ground Stations):**
+  - Tambah, edit, dan hapus data stasiun bumi.
+  - Melacak koordinat lintang dan bujur (*Latitude* & *Longitude*).
+  - Terhubung langsung dengan relasi satelit.
+- **Manajemen Satelit:**
+  - Pendaftaran satelit baru (*Create*), edit, dan hapus data.
+  - Fitur pencarian (*Search*) berdasarkan nama satelit.
+  - Tampilan detail untuk melihat informasi spesifik beserta data TLE (*Two-Line Element*).
+
+## 🛠️ Persyaratan Sistem
+
+Pastikan perangkatmu memenuhi kebutuhan berikut:
+- **PHP** >= 8.3
+- **Composer** - **MySQL** atau **SQLite**
+
+## 💻 Cara Menjalankan Aplikasi
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek di komputermu:
+
+1. **Clone repositori ini:**
+   ```bash
+   git clone [https://github.com/username-kamu/satelit--app.git](https://github.com/username-kamu/satelit--app.git)
+   cd satelit--app
