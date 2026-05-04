@@ -10,13 +10,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $stats = [
-            'total_satellites'   => \App\Models\Satellite::count(),
-            'active_satellites'  => \App\Models\Satellite::where('is_active', true)->count(),
-            'inactive_satellites'=> \App\Models\Satellite::where('is_active', false)->count(),
-            'total_gs'           => \App\Models\GroundStation::count(),
+        $data = [
+            'total_satellites'  => Satellite::count(),
+            'active_satellites' => Satellite::where('is_active', 1)->count(),
+            'total_gs'          => GroundStation::count(),
         ];
 
-        return view('dashboard', $stats);
+        return view('dashboard', $data);
     }
 }

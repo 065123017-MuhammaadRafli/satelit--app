@@ -1,83 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Satelit--App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f4f7f6; }
-        .card { border: none; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .stat-icon { font-size: 2rem; opacity: 0.3; }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
 
-<nav class="navbar navbar-dark bg-primary mb-4">
-    <div class="container">
-        <span class="navbar-brand mb-0 h1">🛰️ Satelit--App Monitoring</span>
-        <div class="d-flex">
-            <a href="{{ route('ground-stations.index') }}" class="btn btn-light btn-sm me-2">Ground Stations</a>
-            <a href="{{ route('satellites.index') }}" class="btn btn-light btn-sm">Satellites</a>
-        </div>
-    </div>
-</nav>
+@section('content')
+<div class="container mt-4">
 
-<div class="container">
-    <div class="row mb-4">
-        <div class="col">
-            <h2>Pusat Kontrol Satelit</h2>
-            <p class="text-muted">Status pemantauan ruang angkasa saat ini.</p>
+    <div class="p-4 mb-4 bg-white rounded-3 shadow-sm border-0">
+        <div class="container-fluid py-2">
+            <h2 class="display-5 fw-bold">Pusat Kontrol Satelit</h2>
+            <p class="col-md-8 fs-5 text-muted">Status pemantauan ruang angkasa saat ini. Kelola data satelit dan stasiun bumi secara mudah.</p>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card bg-white p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase text-muted small">Total Satelit</h6>
-                        <h2 class="fw-bold">{{ $total_satellites }}</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 bg-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted small fw-bold">Total Satelit</h6>
+                            <h2 class="h1 fw-bold mb-0 text-primary">{{ $total_satellites ?? 0 }}</h2>
+                        </div>
+                        <div>
+                            <span class="fs-1 text-primary">🛰️</span>
+                        </div>
                     </div>
-                    <div class="stat-icon text-primary">📡</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
-            <div class="card bg-white p-3 border-start border-success border-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase text-muted small">Satelit Aktif</h6>
-                        <h2 class="fw-bold text-success">{{ $active_satellites }}</h2>
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 bg-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted small fw-bold">Satelit Aktif</h6>
+                            <h2 class="h1 fw-bold mb-0 text-success">{{ $active_satellites ?? 0 }}</h2>
+                        </div>
+                        <div>
+                            <span class="fs-1 text-success">🟢</span>
+                        </div>
                     </div>
-                    <div class="stat-icon text-success">✔️</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
-            <div class="card bg-white p-3 border-start border-info border-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-uppercase text-muted small">Ground Stations</h6>
-                        <h2 class="fw-bold text-info">{{ $total_gs }}</h2>
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 shadow-sm h-100 bg-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted small fw-bold">Ground Stations</h6>
+                            <h2 class="h1 fw-bold mb-0 text-info">{{ $total_gs ?? 0 }}</h2>
+                        </div>
+                        <div>
+                            <span class="fs-1 text-info">🌍</span>
+                        </div>
                     </div>
-                    <div class="stat-icon text-info">🌍</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="alert alert-info">
-                <strong>Info:</strong> Gunakan menu di atas untuk menambah atau mengelola data satelit dan stasiun bumi.
-            </div>
-        </div>
+    <div class="alert alert-info border-0 shadow-sm" role="alert">
+        <strong>Info:</strong> Gunakan menu navigasi di atas untuk menambah, melihat, atau mengelola data satelit dan stasiun bumi.
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection
