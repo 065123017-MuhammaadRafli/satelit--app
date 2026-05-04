@@ -16,8 +16,8 @@ return new class extends Migration
         $table->string('name');
         $table->string('location');
         $table->string('country');
-        $table->decimal('latitude', 10, 8); // Presisi koordinat
-        $table->decimal('longitude', 11, 8);
+        $table->double('latitude');
+        $table->double('longitude');
         $table->timestamps();
     });
 }
