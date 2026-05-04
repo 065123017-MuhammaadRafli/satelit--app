@@ -33,15 +33,16 @@
                     <td>{{ $gs->country }}</td>
                     <td>{{ $gs->latitude }}, {{ $gs->longitude }}</td>
                     <td>
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('ground-stations.edit', $gs->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('ground-stations.destroy', $gs->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data stasiun ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                            </form>
-                        </div>
-                    </td>
+            <div class="d-flex gap-2">
+                <a href="{{ route('ground-stations.show', $gs->id) }}" class="btn btn-sm btn-info text-white">Detail</a>
+                <a href="{{ route('ground-stations.edit', $gs->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <form action="{{ route('ground-stations.destroy', $gs->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data stasiun ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                </form>
+                    </div>
+            </td>
                 </tr>
                 @empty
                 <tr>
