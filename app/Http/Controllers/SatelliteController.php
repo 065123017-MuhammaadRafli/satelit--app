@@ -2,75 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Satellite;
 use App\Models\GroundStation;
-use Illuminate\Http\Request;
 
 class SatelliteController extends Controller
 {
     /**
-     * Menampilkan daftar satelit dengan fitur Search.
+     * Tampilkan daftar satelit.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Satellite::query()->with('groundStation');
-
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        $satellites = $query->latest()->paginate(10);
+        // Ubah dari ->get() menjadi ->paginate(10)
+        $satellites = Satellite::with('groundStation')->paginate(10);
 
         return view('satellites.index', compact('satellites'));
     }
 
     /**
-     * Menampilkan form tambah satelit.
+     * Tampilkan form tambah satelit.
      */
     public function create()
     {
-        $ground_stations = \App\Models\GroundStation::all();
+        $ground_stations = GroundStation::all();
         return view('satellites.create', compact('ground_stations'));
     }
 
     /**
-     * Menyimpan data satelit baru.
+     * Simpan data satelit baru ke database.
      */
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'ground_station_id' => 'required|exists:ground_stations,id',
             'name'              => 'required|string|max:255',
+            'ground_station_id' => 'required|exists:ground_stations,id',
             'owner_country'     => 'required|string|max:255',
-            'launch_date'       => 'required|date',
-            'orbit_type'        => 'required|in:LEO,MEO,GEO',
-            'is_active'         => 'required|boolean',
-            'tle'               => 'required|string', // Validasi TLE
+            'launch_date'       => 'nullable|date',
+            'orbit_type'        => 'required|string|max:100',
+            'is_active'         => 'boolean',
+            'tle_data'          => 'nullable|string',
         ]);
 
-        \App\Models\Satellite::create($validated);
+        // Pastikan nilai boolean diatur jika checkbox tidak tercentang
+        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+
+        Satellite::create($validated);
 
         return redirect()->route('satellites.index')
-                         ->with('success', 'Satelit berhasil didaftarkan dengan data TLE.');
+            ->with('success', 'Satelit berhasil didaftarkan dengan data TLE.');
     }
 
-    public function update(Request $request, \App\Models\Satellite $satellite)
+    /**
+     * Tampilkan detail satelit tertentu.
+     */
+    public function show(string $id)
+    {
+        $satellite = Satellite::with('groundStation')->findOrFail($id);
+
+        return view('satellites.show', compact('satellite'));
+    }
+
+    /**
+     * Tampilkan form edit satelit tertentu.
+     */
+    public function edit(string $id)
+    {
+        $satellite = Satellite::with('groundStation')->findOrFail($id);
+        $groundStations = GroundStation::all();
+
+        return view('satellites.edit', compact('satellite', 'groundStations'));
+    }
+
+    /**
+     * Perbarui data satelit di database.
+     */
+    public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'ground_station_id' => 'required|exists:ground_stations,id',
             'name'              => 'required|string|max:255',
+            'ground_station_id' => 'required|exists:ground_stations,id',
             'owner_country'     => 'required|string|max:255',
-            'launch_date'       => 'required|date',
-            'orbit_type'        => 'required|in:LEO,MEO,GEO',
-            'is_active'         => 'required|boolean',
-            'tle'               => 'required|string', // Validasi TLE
+            'launch_date'       => 'nullable|date',
+            'orbit_type'        => 'required|string|max:100',
+            'is_active'         => 'boolean',
+            'tle_data'          => 'nullable|string',
         ]);
 
+        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+
+        $satellite = Satellite::findOrFail($id);
         $satellite->update($validated);
 
         return redirect()->route('satellites.index')
-                         ->with('success', 'Data satelit dan TLE berhasil diperbarui.');
+            ->with('success', 'Satelit berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus data satelit dari database.
+     */
+    public function destroy(string $id)
+    {
+        $satellite = Satellite::findOrFail($id);
+        $satellite->delete();
+
+        return redirect()->route('satellites.index')
+            ->with('success', 'Satelit berhasil dihapus.');
     }
 }
-
-
