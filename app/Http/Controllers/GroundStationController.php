@@ -9,8 +9,9 @@ class GroundStationController extends Controller
 {
     public function index()
     {
-        $stations = GroundStation::all();
-        return view('ground_stations.index', compact('stations'));
+        $ground_stations = GroundStation::query()->paginate(10);
+
+        return view('ground_stations.index', compact('ground_stations'));
     }
 
     public function create()
