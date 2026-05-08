@@ -1,86 +1,91 @@
-@extends('layouts.app')
+@extends('layouts.stisla')
 
 @section('content')
-<div class="container mt-4">
-
-    <div class="p-4 mb-4 bg-white rounded-4 shadow-sm border-0">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <h3 class="fw-bold text-dark mb-1">🌍 Daftar Stasiun Bumi</h3>
-                <p class="text-muted fs-6 mb-0">Kelola data lokasi stasiun bumi yang terhubung dengan jaringan satelit.</p>
-            </div>
-            <div>
-                <a href="{{ route('ground-stations.create') }}" class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm">
-                    + Tambah Stasiun
-                </a>
-            </div>
-        </div>
+<div class="section-header">
+    <h1>Daftar Stasiun Bumi</h1>
+    <div class="section-header-breadcrumb">
+        <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+        <div class="breadcrumb-item">Stasiun Bumi</div>
     </div>
+</div>
 
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light text-uppercase fs-7 text-secondary">
-                        <tr>
-                            <th class="ps-4 py-3">Nama Stasiun</th>
-                            <th class="py-3">Lokasi</th>
-                            <th class="py-3">Negara</th>
-                            <th class="py-3">Koordinat (Lat/Long)</th>
-                            <th class="pe-4 py-3 text-end">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($ground_stations as $gs)
-                            <tr>
-                                <td class="ps-4 fw-bold text-dark">{{ $gs->name }}</td>
-                                <td>{{ $gs->location }}</td>
-                                <td>
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-1 rounded-pill">
-                                        {{ $gs->country }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <code class="text-primary">{{ $gs->latitude }}, {{ $gs->longitude }}</code>
-                                </td>
-                                <td class="pe-4 text-end">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a href="{{ route('ground-stations.show', $gs->id) }}" class="btn btn-sm btn-info text-white fw-bold px-3 rounded-3 shadow-sm">
-                                             Detail
+<div class="section-body">
+    <h2 class="section-title">Manajemen Stasiun Bumi</h2>
+    <p class="section-lead">
+        Kelola data lokasi stasiun bumi yang terhubung dengan jaringan satelit Anda.
+    </p>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header border-0 d-flex justify-content-between">
+                    <h4 class="text-primary">Data Stasiun</h4>
+                    <div class="card-header-action">
+                        <a href="{{ route('ground-stations.create') }}" class="btn btn-primary btn-icon icon-left">
+                            <i class="fas fa-plus"></i> Tambah Stasiun
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-md">
+                            <thead>
+                                <tr>
+                                    <th class="pl-4">Nama Stasiun</th>
+                                    <th>Lokasi</th>
+                                    <th>Negara</th>
+                                    <th>Koordinat (Lat/Long)</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($ground_stations as $gs)
+                                <tr>
+                                    <td class="pl-4 fw-600 text-dark">{{ $gs->name }}</td>
+                                    <td>{{ $gs->location }}</td>
+                                    <td>
+                                        <div class="badge badge-light border text-capitalize">
+                                            {{ $gs->country }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <code class="text-primary fw-bold">{{ $gs->latitude }}, {{ $gs->longitude }}</code>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ route('ground-stations.show', $gs->id) }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> Detail
                                         </a>
-                                        <a href="{{ route('ground-stations.edit', $gs->id) }}" class="btn btn-sm btn-warning text-dark fw-bold px-3 rounded-3 shadow-sm">
-                                            ✏️ Edit
+                                        <a href="{{ route('ground-stations.edit', $gs->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <form action="{{ route('ground-stations.destroy', $gs->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus stasiun bumi ini?');">
+                                        <form action="{{ route('ground-stations.destroy', $gs->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus stasiun ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger fw-bold px-3 rounded-3 shadow-sm">
-                                                🗑️ Hapus
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    <div class="py-4">
-                                        <span class="fs-1 d-block mb-2">📭</span>
-                                        Belum ada data stasiun bumi yang terdaftar.
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-5 text-muted">
+                                        <i class="fas fa-folder-open mb-2 d-block" style="font-size: 2rem;"></i>
+                                        Belum ada data stasiun bumi.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @if(method_exists($ground_stations, 'links'))
+                <div class="card-footer text-right">
+                    {{ $ground_stations->links() }}
+                </div>
+                @endif
             </div>
         </div>
-
-        @if(method_exists($ground_stations, 'links'))
-            <div class="card-footer bg-white border-0 py-3 px-4">
-                {{ $ground_stations->links() }}
-            </div>
-        @endif
     </div>
 </div>
 @endsection

@@ -1,45 +1,83 @@
-@extends('layouts.app')
+@extends('layouts.stisla')
 
 @section('content')
-<div class="container mt-5">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-success text-white fw-bold">Tambah Ground Station Baru</div>
-        <div class="card-body">
-            <form action="{{ route('ground-stations.store') }}" method="POST">
-                @csrf
+<div class="section-header">
+    <div class="section-header-back">
+        <a href="{{ route('ground-stations.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+    </div>
+    <h1>Tambah Stasiun Bumi</h1>
+    <div class="section-header-breadcrumb">
+        <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+        <div class="breadcrumb-item"><a href="{{ route('ground-stations.index') }}">Stasiun Bumi</a></div>
+        <div class="breadcrumb-item">Tambah</div>
+    </div>
+</div>
 
-                <div class="mb-3">
-                    <label class="form-label">Nama Stasiun</label>
-                    <input type="text" name="name" class="form-control" required placeholder="Contoh: GS-Jakarta-01">
+<div class="section-body">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>Formulir Pendaftaran Stasiun</h4>
                 </div>
+                <form action="{{ route('ground-stations.store') }}" method="POST">
+                    @csrf
+                    <div class="card-body">
+                        <p class="text-muted mb-4">Lengkapi informasi lokasi di bawah ini untuk menambahkan unit stasiun bumi baru.</p>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Lokasi (Kota/Wilayah)</label>
-                        <input type="text" name="location" class="form-control" required placeholder="Contoh: Jakarta">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Negara</label>
-                        <input type="text" name="country" class="form-control" required placeholder="Contoh: Indonesia">
-                    </div>
-                </div>
+                        <div class="form-group">
+                            <label class="font-weight-600">Nama Stasiun</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-broadcast-tower"></i></div>
+                                </div>
+                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Contoh: GS-Ciapus-01" value="{{ old('name') }}" required>
+                            </div>
+                            @error('name') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Latitude</label>
-                        <input type="number" step="any" name="latitude" class="form-control" required placeholder="-6.123456">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Longitude</label>
-                        <input type="number" step="any" name="longitude" class="form-control" required placeholder="106.123456">
-                    </div>
-                </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="font-weight-600">Lokasi (Kota/Wilayah)</label>
+                                <input type="text" name="location" class="form-control @error('location') is-invalid @enderror" placeholder="Contoh: Bogor" value="{{ old('location') }}" required>
+                                @error('location') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="font-weight-600">Negara</label>
+                                <input type="text" name="country" class="form-control @error('country') is-invalid @enderror" placeholder="Contoh: Indonesia" value="{{ old('country') }}" required>
+                                @error('country') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
 
-                <div class="d-flex justify-content-between mt-3">
-                    <a href="{{ route('ground-stations.index') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-success">Simpan Data</button>
-                </div>
-            </form>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="font-weight-600">Latitude</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-map-marker-alt"></i></div>
+                                    </div>
+                                    <input type="text" name="latitude" class="form-control @error('latitude') is-invalid @enderror" placeholder="-6.123456" value="{{ old('latitude') }}" required>
+                                </div>
+                                @error('latitude') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="font-weight-600">Longitude</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-map-pin"></i></div>
+                                    </div>
+                                    <input type="text" name="longitude" class="form-control @error('longitude') is-invalid @enderror" placeholder="106.123456" value="{{ old('longitude') }}" required>
+                                </div>
+                                @error('longitude') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-whitesmoke text-right">
+                        <a href="{{ route('ground-stations.index') }}" class="btn btn-secondary mr-2">Batal</a>
+                        <button type="submit" class="btn btn-primary">Simpan Data Stasiun</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

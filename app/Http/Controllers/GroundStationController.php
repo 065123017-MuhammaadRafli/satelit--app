@@ -35,16 +35,16 @@ class GroundStationController extends Controller
                          ->with('success', 'Ground Station berhasil ditambahkan!');
     }
 
-    public function show(string $id)
+    public function show(GroundStation $ground_station)
     {
-        $station = GroundStation::with('satellites')->findOrFail($id);
-        return view('ground_stations.show', compact('station'));
+
+        return view('ground_stations.show', compact('ground_station'));
     }
 
-    public function edit(string $id)
+        public function edit(GroundStation $ground_station)
     {
-        $station = GroundStation::findOrFail($id);
-        return view('ground_stations.edit', compact('station'));
+        // Pastikan namanya tunggal: 'ground_station'
+        return view('ground_stations.edit', compact('ground_station'));
     }
 
     public function update(Request $request, string $id)

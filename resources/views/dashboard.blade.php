@@ -1,123 +1,112 @@
-@extends('layouts.app')
+@extends('layouts.stisla')
 
 @section('content')
-<div class="container mt-4">
+<div class="section-header">
+    <h1>Pusat Kontrol Satelit</h1>
+</div>
 
-    <div class="p-4 mb-4 bg-white rounded-4 shadow-sm border-0">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <h2 class="fw-bold text-dark mb-1">Pusat Kontrol Satelit</h2>
-                <p class="text-muted fs-6 mb-0">Status pemantauan ruang angkasa saat ini. Kelola data satelit dan stasiun bumi secara mudah.</p>
-            </div>
-            <div class="text-muted small mt-2 mt-md-0">
-                <i class="bi bi-clock"></i> {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4 mb-4">
-        <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm h-100 rounded-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Total Satelit</h6>
-                            <h2 class="fw-bold mb-0">{{ $total_satellites ?? 0 }}</h2>
-                        </div>
-                        <div>
-                            <span class="fs-1 opacity-75">🛰️</span>
-                        </div>
-                    </div>
+<div class="section-body">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card card-statistic-1 shadow-sm">
+                <div class="card-icon bg-primary"><i class="fas fa-satellite"></i></div>
+                <div class="card-wrap">
+                    <div class="card-header"><h4>Total Satelit</h4></div>
+                    <div class="card-body">{{ $total_satellites }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm h-100 rounded-4" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Satelit Aktif</h6>
-                            <h2 class="fw-bold mb-0">{{ $active_satellites ?? 0 }}</h2>
-                        </div>
-                        <div>
-                            <span class="fs-1 opacity-75">🟢</span>
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card card-statistic-1 shadow-sm">
+                <div class="card-icon bg-success"><i class="fas fa-check-circle"></i></div>
+                <div class="card-wrap">
+                    <div class="card-header"><h4>Satelit Aktif</h4></div>
+                    <div class="card-body">{{ $active_satellites }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm h-100 rounded-4" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); color: white;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase text-white-50 small fw-bold mb-1">Ground Stations</h6>
-                            <h2 class="fw-bold mb-0">{{ $total_gs ?? 1 }}</h2>
-                        </div>
-                        <div>
-                            <span class="fs-1 opacity-75">🌍</span>
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card card-statistic-1 shadow-sm">
+                <div class="card-icon bg-warning"><i class="fas fa-broadcast-tower"></i></div>
+                <div class="card-wrap">
+                    <div class="card-header"><h4>Stasiun Bumi</h4></div>
+                    <div class="card-body">{{ $total_gs }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12">
+            <div class="card card-statistic-1 shadow-sm">
+                <div class="card-icon bg-info"><i class="fas fa-bolt"></i></div>
+                <div class="card-wrap">
+                    <div class="card-header"><h4>Sistem</h4></div>
+                    <div class="card-body">Online</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm bg-white rounded-4">
-                <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <h5 class="fw-bold text-dark mb-0">Akses Cepat</h5>
-                        <p class="text-muted small mb-0">Kelola data ruang angkasa dengan cepat menggunakan pintasan di bawah ini.</p>
-                    </div>
-                    <div class="mt-3 mt-md-0 d-flex gap-2">
-                        <a href="{{ route('satellites.create') }}" class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm">
-                            + Tambah Satelit
-                        </a>
-                        <a href="{{ route('satellites.index') }}" class="btn btn-outline-secondary rounded-3 px-4 py-2 fw-bold">
-                            Kelola Data
-                        </a>
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>Monitor Sinyal (Real-time)</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="lineChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>Log Aktivitas Terbaru</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="pl-4">Status</th>
+                                    <th>Aktivitas</th>
+                                    <th>Waktu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="pl-4"><span class="badge badge-success">Success</span></td>
+                                    <td class="font-weight-600">Sinkronisasi Palapa-D</td>
+                                    <td class="text-muted small">Baru saja</td>
+                                </tr>
+                                <tr>
+                                    <td class="pl-4"><span class="badge badge-primary">New</span></td>
+                                    <td class="font-weight-600 text-capitalize">GS-{{ $total_gs > 0 ? 'Aktif' : 'Demo' }} Ditambahkan</td>
+                                    <td class="text-muted small">2 Jam lalu</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm bg-white rounded-4 h-100">
-                <div class="card-body p-4">
-                    <h5 class="card-title fw-bold text-dark mb-4">📊 Grafik Analitik Sistem</h5>
-                    <div class="d-flex justify-content-center align-items-center" style="height: 250px;">
-                        <canvas id="monitoringChart"></canvas>
-                    </div>
+        <div class="col-lg-4 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>Penyebaran Orbit</h4>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm bg-white rounded-4 h-100">
-                <div class="card-body p-4">
-                    <h5 class="card-title fw-bold text-dark mb-4">ℹ️ Status dan Informasi Sistem</h5>
-                    <div class="alert alert-info border-0 rounded-4 p-4 shadow-sm" role="alert">
-                        <div class="d-flex">
-                            <div class="me-3 fs-3">💡</div>
-                            <div>
-                                <h6 class="fw-bold text-info mb-1">Catatan Penggunaan</h6>
-                                <p class="mb-0 small text-dark opacity-75">Gunakan menu navigasi di atas untuk menambah, melihat, atau mengelola data satelit dan stasiun bumi secara real-time.</p>
-                            </div>
+                <div class="card-body">
+                    <canvas id="orbitPieChart" height="250"></canvas>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-circle text-primary mr-1"></i> LEO</span>
+                            <span class="font-weight-bold">{{ $leo_count }}</span>
                         </div>
-                    </div>
-
-                    <div class="d-flex align-items-center justify-content-between text-muted small mt-4">
-                        <div>
-                            <strong>Sistem Status:</strong> <span class="badge bg-success bg-opacity-75 px-3 py-1 rounded-pill">Online</span>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-circle text-warning mr-1"></i> MEO</span>
+                            <span class="font-weight-bold">{{ $meo_count }}</span>
                         </div>
-                        <div>
-                            Versi Aplikasi: v1.0.0
+                        <div class="d-flex justify-content-between">
+                            <span><i class="fas fa-circle text-danger mr-1"></i> GEO</span>
+                            <span class="font-weight-bold">{{ $geo_count }}</span>
                         </div>
                     </div>
                 </div>
@@ -127,42 +116,33 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    const ctx = document.getElementById('monitoringChart').getContext('2d');
-    const monitoringChart = new Chart(ctx, {
-        type: 'doughnut', // Diubah menjadi doughnut agar lebih elegan
+    // Line Chart
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
         data: {
-            labels: ['Total Satelit', 'Satelit Aktif', 'Ground Stations'],
+            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
             datasets: [{
-                label: 'Jumlah Data',
-                data: [
-                    {{ $total_satellites ?? 0 }},
-                    {{ $active_satellites ?? 0 }},
-                    {{ $total_gs ?? 1 }}
-                ],
-                backgroundColor: [
-                    'rgba(30, 60, 114, 0.8)',
-                    'rgba(17, 153, 142, 0.8)',
-                    'rgba(142, 45, 226, 0.8)'
-                ],
-                borderColor: [
-                    '#1e3c72',
-                    '#11998e',
-                    '#8e2de2'
-                ],
-                borderWidth: 2
+                label: 'Signal (dB)',
+                data: [60, 75, 55, 90, 70, 85],
+                borderColor: '#6777ef',
+                backgroundColor: 'rgba(103, 119, 239, 0.1)',
+                fill: true, tension: 0.3
+            }]
+        }
+    });
+
+    // Pie Chart
+    new Chart(document.getElementById('orbitPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['LEO', 'MEO', 'GEO'],
+            datasets: [{
+                data: [{{ $leo_count }}, {{ $meo_count }}, {{ $geo_count }}],
+                backgroundColor: ['#6777ef', '#ffa426', '#fc544b']
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
+        options: { plugins: { legend: { display: false } } }
     });
 </script>
 @endsection
