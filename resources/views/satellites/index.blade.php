@@ -1,26 +1,58 @@
 @extends('layouts.stisla')
 
 @section('content')
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
 <style>
-    .table-action-btns {
-        display: flex;
-        gap: 5px;
-    }
-    .badge-orbit {
+    body { font-family: 'Inter', sans-serif; }
+    .section-header h1 { font-weight: 800; color: #2c3e50; letter-spacing: -1px; }
+
+    /* Card & Table Styling */
+    .card-fleet { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+    .table-fleet thead th {
+        background-color: #f8fafc;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 700;
-        font-size: 10px;
-        padding: 5px 12px;
-        border-radius: 50px;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: #64748b;
+        border: none;
+        padding: 20px 15px;
     }
+    .table-fleet tbody td { vertical-align: middle; padding: 18px 15px; border-bottom: 1px solid #f1f5f9; }
+    .table-fleet tbody tr:hover { background-color: #fcfdfe; transition: 0.3s ease; }
+
+    /* Data Specific Styling */
+    .sat-name { font-weight: 700; color: #1e293b; font-size: 15px; }
+    .orbit-pill {
+        font-size: 10px; font-weight: 800; padding: 5px 15px; border-radius: 50px;
+        letter-spacing: 1px; box-shadow: 0 2px 4px rgba(103, 119, 239, 0.2);
+    }
+    .altitude-text { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #6777ef; }
+
+    /* GS Info Box */
+    .gs-info { display: flex; align-items: center; gap: 10px; }
+    .gs-icon-small {
+        width: 32px; height: 32px; background: #eef2ff; color: #6366f1;
+        border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px;
+    }
+
+    /* Action Buttons */
+    .btn-action-group { display: flex; gap: 8px; justify-content: center; }
+    .btn-modern {
+        width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+        border-radius: 10px; transition: 0.3s; border: none; color: white;
+    }
+    .btn-modern:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .btn-view { background: #6777ef; }
+    .btn-edit { background: #ffa426; }
+    .btn-delete { background: #fc544b; }
 </style>
 
 <div class="section-header">
-    <h1>Daftar Armada Satelit</h1>
+    <h1>Armada Satelit</h1>
     <div class="section-header-button">
-        <a href="{{ route('satellites.create') }}" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus mr-1"></i> Tambah Satelit
+        <a href="{{ route('satellites.create') }}" class="btn btn-primary shadow-primary px-4 font-weight-bold">
+            <i class="fas fa-plus-circle mr-2"></i> Tambah Satelit
         </a>
     </div>
     <div class="section-header-breadcrumb">
@@ -32,74 +64,78 @@
 <div class="section-body">
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header">
-                    <h4><i class="fas fa-satellite text-primary mr-2"></i> Data Satelit Terdaftar</h4>
+            <div class="card card-fleet">
+                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                    <h4 class="text-dark"><i class="fas fa-layer-group text-primary mr-2"></i> Monitoring Hub Satelit</h4>
+                    <span class="badge badge-light border">{{ $satellites->count() }} Total Armada</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible show fade">
-                            <div class="alert-body">
-                                <button class="close" data-dismiss="alert"><span>&times;</span></button>
-                                <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                        <div class="px-4 pt-3">
+                            <div class="alert alert-success alert-dismissible show fade shadow-sm">
+                                <div class="alert-body">
+                                    <button class="close" data-dismiss="alert"><span>&times;</span></button>
+                                    <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                                </div>
                             </div>
                         </div>
                     @endif
 
                     <div class="table-responsive">
-                        <table class="table table-striped table-md align-middle" id="table-1">
+                        <table class="table table-fleet">
                             <thead>
-                                <tr class="text-uppercase" style="font-size: 11px; letter-spacing: 1px;">
-                                    <th class="text-center" style="width: 5%;">#</th>
+                                <tr>
+                                    <th class="text-center" style="width: 50px;">#</th>
                                     <th>Nama Satelit</th>
                                     <th>Negara</th>
-                                    <th class="text-center">Orbit</th>
+                                    <th class="text-center">Tipe Orbit</th>
                                     <th>Altitude</th>
-                                    <th>Stasiun Bumi</th>
-                                    <th class="text-center" style="width: 15%;">Aksi</th>
+                                    <th>Stasiun Monitoring</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($satellites as $satellite)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center text-muted small">{{ $loop->iteration }}</td>
                                         <td>
-                                            <span class="font-weight-600 text-dark">{{ $satellite->name }}</span>
-                                        </td>
-                                        <td class="text-capitalize">{{ $satellite->country }}</td>
-                                        <td class="text-center">
-                                            <span class="badge badge-primary badge-orbit">{{ $satellite->orbit_type }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge badge-light font-weight-bold">{{ $satellite->altitude }} Km</span>
-                                        </td>
-                                        <td>
-                                            <div class="text-muted small">
-                                                <i class="fas fa-broadcast-tower mr-1"></i>
-                                                {{ $satellite->groundStation->name ?? 'Tidak Terhubung' }}
+                                            <div class="d-flex align-items-center">
+                                                <div class="mr-3 text-primary" style="font-size: 20px;">
+                                                    <i class="fas fa-satellite"></i>
+                                                </div>
+                                                <div class="sat-name">{{ $satellite->name }}</div>
                                             </div>
                                         </td>
+                                        <td class="text-muted font-weight-600">{{ $satellite->country }}</td>
                                         <td class="text-center">
-                                            <div class="table-action-btns justify-content-center">
-                                                <a href="{{ route('satellites.show', $satellite->id) }}"
-                                                   class="btn btn-info btn-sm shadow-sm"
-                                                   title="Detail Telemetri">
+                                            <span class="badge badge-primary orbit-pill">{{ $satellite->orbit_type }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="altitude-text">{{ $satellite->altitude }}</span> <small class="text-muted font-weight-bold">KM</small>
+                                        </td>
+                                        <td>
+                                            <div class="gs-info">
+                                                <div class="gs-icon-small shadow-sm">
+                                                    <i class="fas fa-broadcast-tower"></i>
+                                                </div>
+                                                <div class="small">
+                                                    <div class="font-weight-bold text-dark">{{ $satellite->groundStation->name ?? 'N/A' }}</div>
+                                                    <div class="text-muted" style="font-size: 10px;">{{ $satellite->groundStation->location ?? '-' }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-action-group">
+                                                <a href="{{ route('satellites.show', $satellite->id) }}" class="btn-modern btn-view" title="Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-
-                                                <a href="{{ route('satellites.edit', $satellite->id) }}"
-                                                   class="btn btn-warning btn-sm shadow-sm text-white"
-                                                   title="Edit Konfigurasi">
+                                                <a href="{{ route('satellites.edit', $satellite->id) }}" class="btn-modern btn-edit" title="Edit">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
-
-                                                <form action="{{ route('satellites.destroy', $satellite->id) }}"
-                                                      method="POST"
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus satelit ini? Semua data telemetri akan hilang.')">
+                                                <form action="{{ route('satellites.destroy', $satellite->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data satelit ini?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm shadow-sm" title="Hapus Data">
+                                                    <button type="submit" class="btn-modern btn-delete" title="Hapus">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -109,19 +145,17 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center py-5">
-                                            <div class="empty-state">
-                                                <div class="empty-state-icon bg-light text-muted p-4 rounded-circle mb-3">
-                                                    <i class="fas fa-satellite-dish fa-2x"></i>
-                                                </div>
-                                                <h6>Belum ada data satelit</h6>
-                                                <p class="text-muted">Silakan klik tombol "Tambah Satelit" untuk memulai.</p>
-                                            </div>
+                                            <img src="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/img/drawkit/drawkit-nature-man-colour.svg" alt="empty" width="150" class="mb-3">
+                                            <p class="text-muted">Data armada satelit belum tersedia.</p>
                                         </td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="card-footer bg-whitesmoke text-center py-2">
+                    <small class="text-muted font-weight-bold uppercase" style="letter-spacing: 1px;">Satelit Monitoring System &copy; 2026</small>
                 </div>
             </div>
         </div>
