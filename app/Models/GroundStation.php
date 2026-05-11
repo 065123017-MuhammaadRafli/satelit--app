@@ -9,7 +9,14 @@ class GroundStation extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+    'name',
+    'location',
+    'latitude',
+    'longitude',
+    'elevation', // Tambahkan ini
+    'status'     // Tambahkan ini
+];
 
     // Satu Ground Station dapat memantau banyak Satelit
     public function satellites()

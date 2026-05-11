@@ -7,70 +7,91 @@ use Illuminate\Http\Request;
 
 class GroundStationController extends Controller
 {
+    /**
+     * Menampilkan daftar stasiun bumi.
+     */
     public function index()
     {
-        $ground_stations = GroundStation::query()->paginate(10);
+        // Mengambil semua data ground stations dengan paginasi (10 data per halaman)
+        $ground_stations = GroundStation::latest()->paginate(10);
 
         return view('ground_stations.index', compact('ground_stations'));
     }
 
+    /**
+     * Menampilkan form untuk membuat stasiun bumi baru.
+     */
     public function create()
     {
         return view('ground_stations.create');
     }
 
+    /**
+     * Menyimpan data stasiun bumi ke database.
+     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        GroundStation::create($validated);
+        GroundStation::create($request->all());
 
-        return redirect()->route('ground-stations.index')
-                         ->with('success', 'Ground Station berhasil ditambahkan!');
+        return redirect()->route('ground_stations.index')
+            ->with('success', 'Stasiun Bumi berhasil ditambahkan.');
     }
 
-    public function show(GroundStation $ground_station)
+    /**
+     * Menampilkan detail stasiun bumi tertentu.
+     */
+    public function show(string $id)
     {
-
+        $ground_station = GroundStation::findOrFail($id);
         return view('ground_stations.show', compact('ground_station'));
     }
 
-        public function edit(GroundStation $ground_station)
+    /**
+     * Menampilkan form untuk mengedit stasiun bumi.
+     */
+    public function edit(string $id)
     {
-        // Pastikan namanya tunggal: 'ground_station'
+        // Mencari data berdasarkan ID
+        $ground_station = GroundStation::findOrFail($id);
+
         return view('ground_stations.edit', compact('ground_station'));
     }
 
+    /**
+     * Memperbarui data stasiun bumi di database.
+     */
     public function update(Request $request, string $id)
     {
-        $station = GroundStation::findOrFail($id);
-
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $station->update($validated);
+        $ground_station = GroundStation::findOrFail($id);
+        $ground_station->update($request->all());
 
-        return redirect()->route('ground-stations.index')
-                         ->with('success', 'Data berhasil diperbarui!');
+        return redirect()->route('ground_stations.index')
+            ->with('success', 'Data Stasiun Bumi berhasil diperbarui.');
     }
 
+    /**
+     * Menghapus stasiun bumi dari database.
+     */
     public function destroy(string $id)
     {
-        $station = GroundStation::findOrFail($id);
-        $station->delete();
+        $ground_station = GroundStation::findOrFail($id);
+        $ground_station->delete();
 
-        return redirect()->route('ground-stations.index')
-                         ->with('success', 'Ground Station berhasil dihapus.');
+        return redirect()->route('ground_stations.index')
+            ->with('success', 'Stasiun Bumi berhasil dihapus.');
     }
 }

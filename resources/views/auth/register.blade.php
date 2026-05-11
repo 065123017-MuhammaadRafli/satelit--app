@@ -1,100 +1,150 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Registrasi &mdash; Satelit--App</title>
 
-@section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card border-0 shadow-lg rounded-4 p-4" style="background-color: #ffffff;">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 
-                <div class="text-center mb-4">
-                    <span class="fs-1">🛰️</span>
-                    <h3 class="fw-bold text-primary mt-2">Registrasi Satelit--App</h3>
-                    <p class="text-muted">Buat akun baru untuk mengakses sistem monitoring.</p>
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #191d21 0%, #34395e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .register-card {
+            width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: none;
+            background: #fff;
+        }
+        .register-header {
+            padding: 30px 30px 10px 30px;
+            text-align: center;
+        }
+        .register-body {
+            padding: 10px 30px 30px 30px;
+        }
+        .register-footer {
+            background: #fdfdfd;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #f9f9f9;
+        }
+        .brand-icon {
+            width: 70px;
+            height: 70px;
+            background: #6777ef;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 5px 15px rgba(103, 119, 239, 0.4);
+        }
+        .form-control {
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .btn-register {
+            border-radius: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-card animated fadeIn">
+        <div class="register-header">
+            <div class="brand-icon">
+                <i class="fas fa-user-plus fa-2x"></i>
+            </div>
+            <h4 class="font-weight-bold text-dark">Registrasi Akun</h4>
+            <p class="text-muted small">Buat akun untuk mengakses sistem monitoring.</p>
+        </div>
+
+        <div class="register-body">
+            @if ($errors->any())
+                <div class="alert alert-danger p-2 text-small mb-3">
+                    <ul class="mb-0 pl-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <div class="form-group">
+                    <label class="small font-weight-bold">Nama Lengkap</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-user"></i></div>
+                        </div>
+                        <input type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap" value="{{ old('name') }}" required autofocus>
+                    </div>
                 </div>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger mb-3" role="alert">
-                        <ul class="mb-0 ps-3">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label fw-semibold">Nama Lengkap</label>
-                        <input id="name" class="form-control form-control-lg @error('name') is-invalid @enderror" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
-                        @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Email</label>
-                        <input id="email" class="form-control form-control-lg @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required autocomplete="username">
-                        @error('email')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label fw-semibold">Password</label>
-                        <div class="input-group">
-                            <input id="password" class="form-control form-control-lg @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="new-password">
-                            <button class="btn btn-outline-secondary px-3" type="button" id="toggleRegPassword">
-                                 🔒
-
-                            </button>
+                <div class="form-group">
+                    <label class="small font-weight-bold">Email Address</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-envelope"></i></div>
                         </div>
-                        <div class="form-text text-muted small">
-                            * Ketentuan: Minimal 8 karakter, kombinasi huruf dan angka.
+                        <input type="email" name="email" class="form-control" placeholder="admin@satelit.app" value="{{ old('email') }}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="small font-weight-bold">Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-lock"></i></div>
                         </div>
-                        @error('password')
-                            <div class="invalid-feedback d-block">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <input type="password" name="password" class="form-control" placeholder="Minimal 8 karakter" required>
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label for="password_confirmation" class="form-label fw-semibold">Konfirmasi Password</label>
-                        <input id="password_confirmation" class="form-control form-control-lg" type="password" name="password_confirmation" required autocomplete="new-password">
+                <div class="form-group">
+                    <label class="small font-weight-bold">Konfirmasi Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-check-double"></i></div>
+                        </div>
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password" required>
                     </div>
+                </div>
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-3 shadow-sm">
-                            REGISTER
-                        </button>
-                    </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg btn-register shadow-primary mt-4">
+                    DAFTARKAN AKUN <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+        </div>
 
-                    <div class="text-center mt-4 border-top pt-3">
-                        <p class="text-muted mb-0">Sudah memiliki akun? <a href="{{ route('login') }}" class="text-primary fw-bold text-decoration-none">Log in di sini</a></p>
-                    </div>
-                </form>
+        <div class="register-footer text-muted">
+            Sudah memiliki akun? <a href="{{ route('login') }}" class="font-weight-bold">Log in di sini</a>
+            <div class="mt-2 text-small">
+                &copy; 2026 Satelit--App Monitoring
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    const toggleRegPassword = document.querySelector('#toggleRegPassword');
-    const regPassword = document.querySelector('#password');
-
-    toggleRegPassword.addEventListener('click', function (e) {
-        // Toggle tipe input
-        const type = regPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-        regPassword.setAttribute('type', type);
-
-        // Ubah ikon teks
-        this.textContent = type === 'password' ? '🔒' : '🔓';
-    });
-</script>
-@endsection
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

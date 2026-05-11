@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Dashboard &mdash; Satelit--App</title>
+    <title>Satelit Monitoring &mdash; App</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/css/components.css">
+
+    <style>
+        /* Perbaikan kecil agar sidebar brand terlihat jelas */
+        .main-sidebar .sidebar-brand { line-height: 60px; }
+    </style>
 </head>
 
 <body>
@@ -24,36 +29,41 @@
                     </ul>
                 </form>
                 <ul class="navbar-nav navbar-right">
-                    <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                        <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->name ?? 'Pengguna' }}</div></a>
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                            <div class="d-sm-none d-lg-inline-block text-white">Hi, {{ Auth::user()->name }}</div>
+                        </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <div class="dropdown-divider"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item has-icon text-danger">
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger"
+                                   onclick="event.preventDefault(); this.closest('form').submit();">
                                     <i class="fas fa-sign-out-alt"></i> Logout
-                                </button>
+                                </a>
                             </form>
                         </div>
                     </li>
                 </ul>
             </nav>
 
-            <div class="main-sidebar">
+            <div class="main-sidebar shadow-sm">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="{{ route('dashboard') }}">Satelit--App</a>
-                    </div>
-                    <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ route('dashboard') }}">St</a>
+                        <a href="{{ route('dashboard') }}">SATELIT--APP</a>
                     </div>
                     <ul class="sidebar-menu">
                         <li class="menu-header">Dashboard</li>
-                        <li class="active"><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a></li>
+                        <li class="{{ Request::is('dashboard') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
+                        </li>
 
                         <li class="menu-header">Data Modul</li>
-                        <li><a class="nav-link" href="{{ route('ground-stations.index') }}"><i class="fas fa-globe"></i> <span>Stasiun Bumi</span></a></li>
-                        <li><a class="nav-link" href="{{ route('satellites.index') }}"><i class="fas fa-satellite"></i> <span>Satelit</span></a></li>
+                        <li class="{{ Request::is('ground_stations*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('ground_stations.index') }}"><i class="fas fa-broadcast-tower"></i> <span>Stasiun Bumi</span></a>
+                        </li>
+                        <li class="{{ Request::is('satellites*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('satellites.index') }}"><i class="fas fa-satellite"></i> <span>Satelit</span></a>
+                        </li>
                     </ul>
                 </aside>
             </div>
@@ -66,21 +76,19 @@
 
             <footer class="main-footer">
                 <div class="footer-left">
-                    Copyright &copy; 2026 <div class="bullet"></div> Satelit--App Monitoring
-                </div>
-                <div class="footer-right">
-                    v1.0.0
+                    Copyright &copy; 2026 <div class="bullet"></div> Satelit Monitoring System
                 </div>
             </footer>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
-    <script src="{{ asset('assets/js/scripts.js') }}"></script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/js/stisla.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/js/scripts.js"></script>
 </body>
 </html>

@@ -15,9 +15,11 @@ return new class extends Migration
         $table->id();
         $table->string('name');
         $table->string('location');
-        $table->string('country');
-        $table->double('latitude');
-        $table->double('longitude');
+        $table->string('country')->nullable();
+        $table->string('latitude');
+        $table->string('longitude');
+        $table->integer('elevation')->nullable(); // Sudah ada di sini
+        $table->string('status')->default('active'); // Sudah ada di sini
         $table->timestamps();
     });
 }
