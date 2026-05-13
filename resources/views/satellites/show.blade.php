@@ -2,117 +2,51 @@
 
 @section('content')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 
 <style>
-    /* Global Typography */
-    body { font-family: 'Inter', sans-serif; }
-    .section-header h1 { font-weight: 800; color: #2c3e50; letter-spacing: -1px; }
+    .tle-box { background-color: #1a1a2e; color: #00ffcc; font-family: monospace; padding: 15px; border-radius: 8px; font-size: 14px; }
+    .telemetry-card { border-radius: 15px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .val-box { font-size: 22px; font-weight: bold; color: #6777ef; margin-top: 5px; }
 
-    /* Hero Card - Satellite Identity */
-    .hero-card {
-        background: linear-gradient(135deg, #6777ef 0%, #394eea 100%);
-        color: white;
-        border-radius: 20px;
-        padding: 35px;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 25px;
-        box-shadow: 0 15px 30px rgba(103, 119, 239, 0.3);
+    /* TITIK RADAR MERAH GLOWING */
+    .satellite-dot {
+        width: 14px;
+        height: 14px;
+        background-color: #ff3b30;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255, 59, 48, 0.8), 0 0 20px rgba(255, 59, 48, 0.6);
     }
-    .hero-card .hero-bg {
+
+    /* LABEL NAMA SATELIT DI PETA */
+    .sat-label {
+        background-color: rgba(255, 255, 255, 0.95);
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-weight: bold;
+        color: #333;
+        font-size: 11px;
+        padding: 4px 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        white-space: nowrap;
+    }
+
+    /* Tombol Recenter */
+    .recenter-btn {
         position: absolute;
-        right: -40px;
-        top: -40px;
-        font-size: 220px;
-        opacity: 0.1;
-        transform: rotate(-15deg);
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid #ccc;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-
-    /* Stats Grid */
-    .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; }
-    .stat-box {
-        background: rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(8px);
-        border-radius: 15px;
-        padding: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; font-weight: 800; margin-bottom: 5px; }
-    .stat-value { font-size: 20px; font-weight: 800; }
-
-    /* TLE Terminal - Split View */
-    .tle-card { background: #0f172a; border-radius: 18px; border: 1px solid #1e293b; overflow: hidden; }
-    .tle-card-header {
-        background: #1e293b;
-        padding: 12px 20px;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid #334155;
-    }
-    .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
-    .tle-body { padding: 25px; }
-
-    .tle-line-wrapper { margin-bottom: 20px; }
-    .tle-line-wrapper:last-child { margin-bottom: 0; }
-    .tle-label { font-size: 9px; color: #94a3b8; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-
-    .tle-box {
-        background: rgba(0, 0, 0, 0.4);
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #334155;
-        transition: all 0.3s ease;
-    }
-    .tle-box:hover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
-    .tle-box.active { border-left: 4px solid #34d399; }
-
-    .tle-box code {
-        font-family: 'JetBrains Mono', monospace;
-        color: #34d399;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        display: block;
-        white-space: pre-wrap;
-    }
-
-    /* Tracking Station Card */
-    .gs-card {
-        background: white;
-        border-radius: 18px;
-        padding: 22px;
-        display: flex;
-        align-items: center;
-        border: 1px solid #f1f5f9;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    .gs-icon {
-        width: 55px; height: 55px;
-        background: #eef2ff;
-        color: #6366f1;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 18px;
-        font-size: 22px;
-    }
-
-    /* Leaflet Map */
-    #map {
-        height: 640px;
-        width: 100%;
-        border-radius: 20px;
-        border: 5px solid white;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
-    .coords-floating {
-        background: white;
-        padding: 12px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        margin-top: 15px;
-    }
+    .recenter-btn:hover { background: #fff; color: #6777ef; }
 </style>
 
 <div class="section-header">
@@ -123,80 +57,94 @@
 </div>
 
 <div class="section-body">
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card telemetry-card mb-0">
+                <div class="card-body d-flex align-items-center py-3">
+                    <div class="mr-3" style="font-size: 35px; color: #3abaf4;"><i class="fas fa-arrows-alt-v"></i></div>
+                    <div>
+                        <div class="text-muted small font-weight-bold">LATITUDE</div>
+                        <div class="val-box" id="live-lat">Menghitung...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card telemetry-card mb-0">
+                <div class="card-body d-flex align-items-center py-3">
+                    <div class="mr-3" style="font-size: 35px; color: #47c363;"><i class="fas fa-arrows-alt-h"></i></div>
+                    <div>
+                        <div class="text-muted small font-weight-bold">LONGITUDE</div>
+                        <div class="val-box" id="live-lon">Menghitung...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card telemetry-card mb-0">
+                <div class="card-body d-flex align-items-center py-3">
+                    <div class="mr-3" style="font-size: 35px; color: #ffa426;"><i class="fas fa-satellite"></i></div>
+                    <div>
+                        <div class="text-muted small font-weight-bold">ALTITUDE</div>
+                        <div class="val-box" id="live-alt">Menghitung...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <div class="col-lg-5">
-            <div class="hero-card shadow-lg">
-                <i class="fas fa-satellite hero-bg"></i>
-                <div style="position: relative; z-index: 2;">
-                    <div class="badge badge-pill badge-warning mb-3 px-3 py-1 shadow-sm" style="font-weight: 800; font-size: 10px;">LIVE MONITORING</div>
-                    <h2 class="mb-1">{{ $satellite->name }}</h2>
-                    <p class="mb-0 text-white-50"><i class="fas fa-globe-asia mr-2"></i>Operator: {{ $satellite->country }}</p>
-
-                    <div class="stats-container">
-                        <div class="stat-box">
-                            <div class="stat-label">Orbit Class</div>
-                            <div class="stat-value">{{ $satellite->orbit_type }}</div>
+        <div class="col-12 col-md-4">
+            <div class="card telemetry-card bg-primary text-white">
+                <div class="card-body py-4">
+                    <span class="badge badge-warning mb-2">LIVE MONITORING</span>
+                    <h2 class="font-weight-bold">{{ $satellite->name }}</h2>
+                    <p><i class="fas fa-globe"></i> Operator: {{ $satellite->country }}</p>
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <div class="text-white-50 small font-weight-bold">ORBIT CLASS</div>
+                            <h4>{{ $satellite->orbit_type }}</h4>
                         </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Alt (Perigee)</div>
-                            <div class="stat-value">{{ $satellite->altitude }} <small>KM</small></div>
+                        <div class="col-6">
+                            <div class="text-white-50 small font-weight-bold">STATUS</div>
+                            <h4><span class="badge badge-success">Active</span></h4>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tle-card mb-4 shadow-lg">
-                <div class="tle-card-header">
-                    <div class="dot" style="background: #ff5f56;"></div>
-                    <div class="dot" style="background: #ffbd2e;"></div>
-                    <div class="dot" style="background: #27c93f;"></div>
-                    <span class="ml-2 text-white-50 font-weight-bold small text-uppercase" style="letter-spacing: 1px;">Satellite Orbital Elements</span>
+            <div class="card telemetry-card bg-dark text-white mt-4">
+                <div class="card-header border-0 pb-1">
+                    <h4 class="text-white"><i class="fas fa-code mr-2"></i> ORBITAL ELEMENTS (TLE)</h4>
                 </div>
-                <div class="tle-body">
-                    @php
-                        // Memecah TLE menjadi Baris 1 dan Baris 2
-                        $tle_data = explode("\n", trim($satellite->tle));
-                    @endphp
+                <div class="card-body pt-0">
+                    <div class="text-muted small mb-1 mt-2">LINE 1</div>
+                    <div class="tle-box mb-3" style="word-break: break-all; white-space: pre-wrap;">{{ explode("\n", str_replace("\r", "", $satellite->tle))[0] ?? 'N/A' }}</div>
 
-                    <div class="tle-line-wrapper">
-                        <div class="tle-label">Primary Identity (Line 1)</div>
-                        <div class="tle-box">
-                            <code>{{ $tle_data[0] ?? 'N/A' }}</code>
-                        </div>
-                    </div>
-
-                    <div class="tle-line-wrapper">
-                        <div class="tle-label">Orbital Parameters (Line 2)</div>
-                        <div class="tle-box active">
-                            <code>{{ $tle_data[1] ?? 'N/A' }}</code>
-                        </div>
-                    </div>
+                    <div class="text-muted small mb-1">LINE 2</div>
+                    <div class="tle-box" style="word-break: break-all; white-space: pre-wrap;">{{ explode("\n", str_replace("\r", "", $satellite->tle))[1] ?? 'N/A' }}</div>
                 </div>
             </div>
 
-            <div class="gs-card shadow-sm mb-4">
-                <div class="gs-icon">
-                    <i class="fas fa-broadcast-tower"></i>
-                </div>
-                <div>
-                    <div class="text-small text-muted font-weight-bold text-uppercase" style="letter-spacing: 1px;">Command Station</div>
-                    <h6 class="mb-0 text-dark">{{ $satellite->groundStation->name }}</h6>
-                    <small class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i>{{ $satellite->groundStation->location }}</small>
+            <div class="card telemetry-card mt-4">
+                <div class="card-body d-flex align-items-center">
+                    <div class="mr-3" style="font-size: 30px; color: #6777ef;"><i class="fas fa-broadcast-tower"></i></div>
+                    <div>
+                        <div class="text-muted small font-weight-bold">GROUND STATION</div>
+                        <h6 class="mb-0 font-weight-bold">{{ $satellite->groundStation->name ?? 'N/A' }}</h6>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-7">
-            <div id="map"></div>
-
-            <div class="coords-floating d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="text-muted small text-uppercase font-weight-bold" style="letter-spacing: 1px;">Latitude</span>
-                    <div class="text-primary font-weight-bold h5 mb-0">{{ $satellite->groundStation->latitude }}</div>
-                </div>
-                <div class="text-right">
-                    <span class="text-muted small text-uppercase font-weight-bold" style="letter-spacing: 1px;">Longitude</span>
-                    <div class="text-primary font-weight-bold h5 mb-0">{{ $satellite->groundStation->longitude }}</div>
+        <div class="col-12 col-md-8">
+            <div class="card telemetry-card">
+                <div class="card-body p-0 position-relative">
+                    <button class="recenter-btn" onclick="recenterMap()">
+                        <i class="fas fa-crosshairs"></i> Recenter
+                    </button>
+                    <div id="map-gs" style="height: 600px; border-radius: 12px; z-index: 1;"></div>
                 </div>
             </div>
         </div>
@@ -204,38 +152,76 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/4.0.0/satellite.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var lat = {{ $satellite->groundStation->latitude }};
-        var lon = {{ $satellite->groundStation->longitude }};
+    var map, satMarker, currentPosLatLng;
 
-        // Init Map
-        var map = L.map('map', {
-            center: [lat, lon],
-            zoom: 12,
-            zoomControl: false,
-            attributionControl: false
-        });
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Setup Map
+        map = L.map('map-gs', { center: [0, 0], zoom: 3, worldCopyJump: true });
 
-        // Layer Peta
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        // 2. Hybrid Satellite Layer (Google Satellite + Labels)
+        L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps Satellite',
+            maxZoom: 18
+        }).addTo(map);
 
-        // Control Zoom ke Kanan Bawah
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
+        // 3. Satellite Icon
+        var satIcon = L.divIcon({ className: 'satellite-dot', iconSize: [14, 14], iconAnchor: [7, 7] });
+        satMarker = L.marker([0, 0], {icon: satIcon, zIndexOffset: 1000})
+            .bindTooltip("{{ $satellite->name }}", { permanent: true, direction: 'right', className: 'sat-label', offset: [10, 0] })
+            .addTo(map);
 
-        // Custom Glowing Pulse Marker
-        var customIcon = L.divIcon({
-            className: 'custom-marker',
-            html: "<div style='background-color:#6777ef; width:18px; height:18px; border-radius:50%; border:3px solid white; box-shadow:0 0 20px rgba(103,119,239,0.8);'></div>",
-            iconSize: [18, 18],
-            iconAnchor: [9, 9]
-        });
+        // 4. Draw Full Orbit Prediction
+        var tleData = `{!! str_replace("\r", "", $satellite->tle) !!}`;
+        var lines = tleData.split('\n');
+        if (lines.length >= 2) {
+            var satrec = satellite.twoline2satrec(lines[0].trim(), lines[1].trim());
+            var orbitCoords = [];
+            var now = new Date();
+            for(var i = -45; i <= 45; i++) {
+                var time = new Date(now.getTime() + i * 60000);
+                var posVel = satellite.propagate(satrec, time);
+                var gmst = satellite.gstime(time);
+                if (posVel.position) {
+                    var gd = satellite.eciToGeodetic(posVel.position, gmst);
+                    var lng = satellite.degreesLong(gd.longitude);
+                    var lat = satellite.degreesLat(gd.latitude);
+                    if (orbitCoords.length > 0) {
+                        if (Math.abs(lng - orbitCoords[orbitCoords.length - 1][1]) > 180) {
+                            L.polyline(orbitCoords, {color: '#ff3b30', weight: 2, opacity: 0.6}).addTo(map);
+                            orbitCoords = [];
+                        }
+                    }
+                    orbitCoords.push([lat, lng]);
+                }
+            }
+            L.polyline(orbitCoords, {color: '#ff3b30', weight: 2, opacity: 0.6}).addTo(map);
+        }
 
-        L.marker([lat, lon], {icon: customIcon}).addTo(map)
-            .bindPopup("<b style='font-family:Inter;'>{{ $satellite->groundStation->name }}</b>").openPopup();
+        // 5. Live Tracking Update
+        function updatePosition() {
+            fetch(`/api/satellites/{{ $satellite->id }}/track`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status !== 'error') {
+                        currentPosLatLng = [data.latitude, data.longitude];
+                        satMarker.setLatLng(currentPosLatLng);
+                        document.getElementById('live-lat').innerText = data.latitude + '°';
+                        document.getElementById('live-lon').innerText = data.longitude + '°';
+                        document.getElementById('live-alt').innerText = data.altitude + ' km';
+                    }
+                });
+        }
 
-        // Fix render delay
-        setTimeout(function(){ map.invalidateSize(); }, 600);
+        updatePosition();
+        setInterval(updatePosition, 3000);
+        setTimeout(recenterMap, 1500);
     });
+
+    function recenterMap() {
+        if(currentPosLatLng) map.setView(currentPosLatLng, 4, { animate: true });
+    }
 </script>
 @endsection

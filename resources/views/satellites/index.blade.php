@@ -54,6 +54,10 @@
         <a href="{{ route('satellites.create') }}" class="btn btn-primary shadow-primary px-4 font-weight-bold">
             <i class="fas fa-plus-circle mr-2"></i> Tambah Satelit
         </a>
+
+        <a href="{{ route('satellites.pdf') }}" class="btn btn-danger shadow-sm px-4 font-weight-bold ml-2">
+            <i class="fas fa-file-pdf mr-2"></i> Cetak PDF
+        </a>
     </div>
     <div class="section-header-breadcrumb">
         <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
@@ -144,18 +148,12 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-5">
-                                            <img src="https://cdn.jsdelivr.net/gh/stisla/stisla@master/assets/img/drawkit/drawkit-nature-man-colour.svg" alt="empty" width="150" class="mb-3">
-                                            <p class="text-muted">Data armada satelit belum tersedia.</p>
-                                        </td>
+                                        <td colspan="7" class="text-center py-5 text-muted">Data armada satelit belum tersedia.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="card-footer bg-whitesmoke text-center py-2">
-                    <small class="text-muted font-weight-bold uppercase" style="letter-spacing: 1px;">Satelit Monitoring System &copy; 2026</small>
                 </div>
             </div>
         </div>
